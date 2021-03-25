@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--  -->
+    <title>Document</title>
+    <style>
+        body{
+            margin : 0 ;
+            padding : 0;
+        }
+        #container {
+            width: 410px;
+            height: 428px;
+
+            background: ivory;
+        }
+        #chatView {
+            height: 90%;
+            overflow-y: scroll;
+        }
+        #chatForm {
+            height: 10%;
+            border-top: 1px solid black;
+            text-align: center;
+        }
+        #msg {
+            width: 80%;
+            height: 32px;
+            border-radius: 8px;
+        }
+        #send {
+            width: 16%;
+            height: 34px;
+            border-radius: 50px;
+            background: black;
+            color: white;
+        }
+        .msgLine {
+        margin: 15px;
+        }
+        .msgBox {
+            border: 1px solid black;
+            background: skyblue;
+            padding: 2px 5px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body onload="init()">
+    <div id="container">
+        <div id="chatView">
+        </div>
+        <form id="chatForm" onsubmit="return false">
+            <input type="text" id="msg" maxlength="100">
+            <input type="submit" id="send" value="전송">
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <script src="/socket.io/socket.io-1.3.7.js"></script> -->
+    <!-- <script src="/node_modules/socket.io/lib/socket.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // url 받아오기 위함
+        var para = document.location.href.split("%");
+        // 보내는 사람, 받는 사람 저장
+        var data = para[1].split(',');
+        // 보내는 사람 
+        var s_user = data[0].toString().trim().substr(2);
+        // 받는 사람
+        var g_user = data[1].toString().trim();
+
+        var socket = io();
+        
+        //채팅 나오는곳
+        var chatView = document.getElementById('chatView');
+        var chatForm = document.getElementById('chatForm');
+
+        function init(){
+            socket.emit("JOIN", {s_user, g_user});
+            socket.emit('SEND_UPDATE_INIT', {s_user: s_user, g_user: g_user});
+            socket.on("JOIN", function(data){
+                var room_number = data;
+                if(room_number == undefined){
+                    // 룸이 없을 때
+                    socket.emit('ROOM_CREATE', {s_user, g_user}); // 룸 만들기
+                    socket.on("CREATE_JOIN_MIDDLE", function(data){ 
+                        // 이게 있어야 만들고 조인 바로 할 수 있음 (중간 과정)
+                        socket.emit('CREATE_JOIN', {s_user, g_user}); // 만든 방에 들어가게금
+                    })
+                    socket.on("FINISH_CREAT_JOIN", function(data){
+                        // 만들고 방에 들어온거 끝 
+                        
+                    })
+                } else {
+                    // 룸이 있을 때
+                    socket.emit("CHAT_LOG", room_number);
+                }
+                
+            });
+            
+            socket.on("CHAT_LOG2", function(data){
+                socket.emit('SEND_UPDATE_INIT', {room: data[0][1], g_user: g_user});
+                for(var i=0; i<data.length; i++){
+                    var user = data[i][2].toString();
+                    // $('#s_user').text("보내는 사람 : " + s_user);
+                    // $('#g_user').text("받는 사람 : " +g_user);
+                    if(s_user == user){
+                        
+                        var msgLine = $('<div class="msgLine">');
+                        var msguser = $('<div class="msgUser">');
+                        var msgBox = $('<div class="msgBox">');
+                        
+                        msguser.append(s_user);
+                        msguser.css('display', 'block');
+                        msgBox.append(data[i][3]);
+                        msgBox.css('display', 'inline-block');
+            
+                        msgLine.css('text-align', 'right');
+                        msgLine.append(msguser);
+                        msgLine.append(msgBox);
+            
+                        $('#chatView').append(msgLine);
+            
+                        chatView.scrollTop = chatView.scrollHeight;
+                    }
+                    else {
+                        var msgLine = $('<div class="msgLine">');
+                        var msgBox = $('<div class="msgBox">');
+                        var msguser = $('<div class="msgUser">');
+                        
+                        msguser.append(g_user);
+                        msguser.css('display', 'block');
+                        msgBox.append(data[i][3]);
+                        msgBox.css('display', 'inline-block');
+                        
+                        msgLine.append(msguser);
+                        msgLine.append(msgBox);
+                        $('#chatView').append(msgLine);
+                    
+                        chatView.scrollTop = chatView.scrollHeight;
+                    }
+                }
+            }) // socket.on("CHAT_LOG", function(data){ END
+        } // init END
+     
+        chatForm.addEventListener('submit', function() {
+            var msg = $('#msg');
+            if (msg.val() == '') {
+                return;
+                    
+            } else {
+                socket.emit('SEND', {s_user: s_user, g_user: g_user, msg: msg.val()});
+                socket.emit('SEND_INS', {s_user: s_user, g_user: g_user, msg: msg.val()});
+                
+                var msgLine = $('<div class="msgLine">');
+                var msgBox = $('<div class="msgBox">');
+                var msguser = $('<div class="msgUser">');
+     
+                msgBox.append(msg.val());
+                msguser.append(s_user);
+                msguser.css('display', 'block');
+                msgBox.css('display', 'inline-block');
+     
+                msgLine.css('text-align', 'right');
+                msgLine.append(msguser);
+                msgLine.append(msgBox);
+                
+     
+                $('#chatView').append(msgLine);
+     
+                msg.val('');
+                chatView.scrollTop = chatView.scrollHeight;
+            }
+        });
+     
+        socket.on('SEND', function(data) {
+            socket.emit('SEND_UPDATE', {s_user: s_user, g_user: g_user, room: data.room});
+            var msgLine = $('<div class="msgLine">');
+            var msgBox = $('<div class="msgBox">');
+            var msguser = $('<div class="msgUser">');
+
+            msgBox.append(data.msg);
+            msgBox.css('display', 'inline-block');
+                
+            msguser.append(g_user);
+            msguser.css('display', 'block');
+
+            msgLine.append(msguser);
+            msgLine.append(msgBox);
+            
+            $('#chatView').append(msgLine);
+     
+            chatView.scrollTop = chatView.scrollHeight;
+        });
+    </script>
+    
+</body>
+</html>

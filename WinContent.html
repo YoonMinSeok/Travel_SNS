@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="//code.jquery.com/jquery-3.2.1.min.js">
+    </script>
+<!--  -->
+    <!-- <script
+        src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=l7xxd2cd460deb384cf38122a7adf861f835">
+    </script> -->
+
+    <script
+    src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=l7xxe76de30a5bad412fabfa1ca26bd2eefe">
+    </script>
+
+    <link rel="stylesheet" type="text/css" href="WinContent.css">
+</head>
+<body onload="initTmap()"><!-- 맵 생성 실행 -->
+    
+    <div id="map_div"> <!-- 맵 출력되는 부분 -->
+        
+        <!-- 로그아웃 버튼 -->
+        <div id="logout_field">
+            <img src="image/logout.png" id="logout">
+        </div>
+        <!-- 로그아웃 버튼 END -->
+
+        <!-- 로그인 정보를 뿌려주는 부분 -->
+        <div id="login_info_field">
+            <span id="login_info"></span>
+            <span id="login_greet">환영합니다.</span>
+        </div>
+        <!-- 로그인 정보를 뿌려주는 부분 END --> 
+
+         <!-- 현재위치버튼 -->
+         <div id="i_gps" onclick="current_location()">
+            <img src="image/gps.png" id="gps_click">
+        </div><!-- 현재위치버튼 END -->
+
+        <!-- 지구버튼 -->
+        <div id="i_world" onclick="world()">
+            <img src="image/earth.png" id="earth_click"><!-- earth_click css에 사용 중 이지 않음 -->
+            <!-- 추후 이미지 바꾸고 사이즈 변경할 수 있어서 지우지 않음 -->
+        </div> <!-- 지구버튼 END -->
+
+        <!-- 내가 입력한 마커 조회 부분 -->
+        <div id="my_search_field">
+            <img src="image/my.png" id="my_search">
+        </div>
+        <!-- 내가 입력한 마커 조회 부분 END -->
+
+        <!-- 핀 추가 버튼 부분 -->
+        <div id="pin_add_field">
+            <img src="image/pin_add.png" id="pin_add">
+        </div>
+        <!-- 핀 추가 버튼 부분 END -->
+
+         <!-- 지도 부분 -->
+         <div id="all_world">
+            <div id="w_margin"><a href = "WinMap.html" id="w_font" onclick="map_link()">지도</a></div>
+        </div>
+        <!-- 지도 부분 END -->
+
+         <!-- 입력하는 박스 -->
+         <div id="input_box" class="sidenav">
+             
+            <!-- 닫기와 저장버튼 묶기 위함 -->
+            <div id="save_or_close">
+
+                <!-- 뒤로가기버튼 -->
+                <div id="sidenav_back" onclick="backNav()">
+                    <img src="image/back.png" id="back_close">
+                    <div id="back_font">뒤로가기</div>
+                </div> 
+                <!-- 뒤로가기버튼 END -->
+
+                <!-- 닫기버튼 -->
+                <div id="sidenav_close" onclick="closeNav()">
+                    <img src="image/btn_close1.png" id="btn_close">
+                    <div id="close_font">닫기</div>
+                </div> 
+                <!-- 닫기버튼 END -->
+
+                <!-- 삭제버튼 -->
+                <div id="content_delete">
+                    <img src="image/delete.png" id="btn_delete">
+                    <div id="delete_font">삭제</div>
+                </div> 
+                <!-- 삭제버튼 END -->
+
+                <!-- 저장버튼 -->
+                <div id="content_save">
+                    <img src="image/btn_ok2.png" id="btn_save">
+                    <div id="save_font">저장</div>
+                </div> 
+                <!-- 저장버튼 END -->
+
+                <!-- 작성 버튼 -->
+                <div id="content_add">
+                    <img src="image/btn_add.png" id="btn_add">
+                    <div id="add_font">작성</div>
+                </div> 
+                <!-- 작성 버튼 END -->
+
+            </div> <!-- 닫기와 저장버튼 묶는 div end -->
+            
+            <!-- 사진과 글자 넣는 곳을 묶는 div -->
+            <div id="img_con_tie">
+                <!-- 사진 넣는 곳 -->
+                <div id="img_tie">
+                    <div id="img_font">
+                        사진
+                    </div>
+                    <div id="add_img">
+                        <img src="image/img_plus.png" id="imgPlus" onclick="insert_img()">
+                        <input type="file" id="img_search" accept=".jpg, .jpeg , .png" onchange = "insert_img()"/>
+                    </div>
+                </div><!-- 사진 넣는 곳 END -->
+
+                <!-- 게시판 -->
+                <div id = "notice_board">
+                    <div id = "notice_font" style ="table-layout:fixed">
+                        게시판
+                    </div>
+                    <table id = "notice_table">
+                        <thead>
+                             <th width=100>글번호</th>
+                             <th width=150>제목</th>
+                             <th width=600>내용</th>
+                             <th width=150>작성자</th>
+                             <th width=250>작성일</th>
+                             <th width=100>조회수</th> 
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                    
+                </div>
+                <!-- 게시판 -->
+                <!-- 제목밑 내용 넣는 곳 -->
+                <div id = "input_cbox">
+                    <!-- 제목 넣는 곳 -->
+                    <div id="title_tie">
+                        <div id="tc_tie">
+                            <div id="title_font">
+                                제목
+                            </div>
+                            <div id="category_font">
+                                카테고리
+                            </div>
+                        </div>
+                        <div id="tc_i_tie">
+                            <div id="title_box">
+                                <input type="text" class="title_box_input">
+                            </div>
+                            <div id="category_choose">
+                                <select name="cate_choose" id="cate_choose">
+                                    <option value="none">선택하세요</option>
+                                    <option value="food">먹거리</option>
+                                    <option value="see">볼거리</option>
+                                </select>
+                            </div>               
+                        </div>
+                    </div><!-- 제목 넣는 곳 END -->
+                    <!-- 내용 넣는 곳 -->
+                    <div id="content_tie">
+                        <div id="content_font">
+                            내용
+                        </div>
+                        <!-- contenteditable="true" => div에 입력할 수 있게끔 -->
+                        <div id="content_box">
+                            <input type="text" class="content_box_input">
+                        </div>
+                    </div><!-- 내용 넣는 곳 END -->
+                </div><!-- 제목밑 내용 넣는 곳 END -->
+                
+
+
+            </div><!-- 사진과 글자 넣는 곳을 묶는 div END-->
+
+        </div> <!-- 입력하는 박스 끝 -->
+
+    </div><!-- 맵 출력되는 부분 --> 
+
+    <script type="text/javascript">
+
+        var markers = []; // 마커 저장
+        var marker_img; // 이미지 담는곳
+        var icon_img; // 아이콘 이미지 저장
+        var cate; // 카테고리 담는 곳
+        var map,marker; 
+        // 세션 로그인 정보를 user_id에 저장(지도 -> 컨텐츠로 넘어온 아이디)
+        var user_id = sessionStorage.getItem("id").toString().trim();
+        var lonlat; //지도 위치
+        var storymarker = [] // 스토리 마커 저장
+        var all_content =[]; // notice_key, id, 사진, 제목, 카테고리, 내용, 위도, 경도를 저장하기 위한 배열
+        var title, key, detail, img, choose, u_id, wido, gyungdo; // 제목, notice_key, 이미지, 카테고리, 아이디
+        var my_wido, my_gyungdo
+        var count = 0; // 마커 고유아이디 부여하기 위해
+        var add_count = 0; // 핀 추가 클릭여부에 따른 이벤트 적용하기 위해
+        var my_count = 0; // my 클릭 여부에 따른 이벤트 적용하기 위해
+        // pic 은 이미지 경로 저장하기 위한 변수
+        // last_pic 은 새로운 이미지 선택 or 선택 x 이미지 저장하기 위한 변수
+        var pic, last_pic;
+        var note_key = 0; // notice_key저장하기 위해
+        var marker_click = 0; // 수정인지 저장인지 구분하기 위한 변수
+        var para = document.location.href.split("?");
+        var latitud;// 위도
+        var longitude;//경도
+        var g_wido, g_gyungdo, e_s;
+        var my_location = 0;//내위치 변수
+        var pic_wido, pic_gyungdo;
+        var s_count, s_wido, s_gyungdo, s_note_key, s_u_id;
+
+        var first_img; // 처음 이미지 담는 곳
+
+        var root = "//localhost:8082";
+        
+        $(document).ready(function() {
+            
+            // 저장 버튼 클릭 시
+            $('#content_save').click(function() {
+                var params;
+                if($('#cate_choose').val() == "food"){
+                    // 카테고리 먹거리 저장 시 
+                    cate = "먹거리";
+                } else if($('#cate_choose').val() == "see"){
+                    // 카테고리 볼거리 저장 시
+                    cate = "볼거리";
+                }
+
+                if(marker_img != undefined){
+                    // 이미지를 새로 선택했을 때
+                    last_pic = marker_img;
+                } else {
+                    // 이미지를 새로 선택하지 않았을 때
+                    last_pic = pic;
+                }
+
+                if($('#save_font').text() == "저장"){
+                    marker_click = 0;
+                    if(g_wido == "" && my_wido == ""){
+                        // 핀추가 마커 생성 했을 때
+                        params =  marker_click + 
+                                    ", "  +  user_id + 
+                                    ", "  +  note_key +
+                                    ", "  +  last_pic +
+                                    ", " + $('.title_box_input').val() +
+                                    ", " + cate +
+                                    ", " + $('.content_box_input').val()+ 
+                                    ", "  + pic_wido +
+                                    ", "  +  pic_gyungdo;
+                    } else if(pic_wido == "" && my_wido == "") {
+                        // 지도에서 작성 버튼 눌려서 작성했을때
+                        params =  marker_click + 
+                                    ", "  +  user_id + 
+                                    ", "  +  note_key +
+                                    ", "  +  last_pic +
+                                    ", " + $('.title_box_input').val() +
+                                    ", " + cate +
+                                    ", " + $('.content_box_input').val()+ 
+                                    ", "  + g_wido +
+                                    ", "  +  g_gyungdo;
+                                    
+                    } else{
+                        // 현재위치에 작성
+                        params =  marker_click + 
+                                    ", "  +  user_id + 
+                                    ", "  +  note_key +
+                                    ", "  +  last_pic +
+                                    ", " + $('.title_box_input').val() +
+                                    ", " + cate +
+                                    ", " + $('.content_box_input').val()+ 
+                                    ", "  + my_wido +
+                                    ", "  +  my_gyungdo;
+                    }
+
+                }else if($('#save_font').text() == "수정"){
+                    marker_click =1;
+                    params =  marker_click + 
+                                ", "  +  user_id + 
+                                ", "  +  note_key +
+                                ", "  +  last_pic +
+                                ", " + $('.title_box_input').val() +
+                                ", " + cate +
+                                ", " + $('.content_box_input').val()+ 
+                                ", "  + wido +
+                                ", "  +  gyungdo;
+                                
+                } else if($('#save_font').text() == "등록"){
+                    marker_click = 2;
+                    params =  marker_click + 
+                                ", "  +  user_id + 
+                                ", "  +  note_key +
+                                ", "  +  last_pic +
+                                ", " + $('.title_box_input').val() +
+                                ", " + cate +
+                                ", " + $('.content_box_input').val()+ 
+                                ", "  + wido +
+                                ", "  +  gyungdo;
+                }else{
+                    marker_click = 3;
+                    params =  marker_click + 
+                                ", "  +  user_id + 
+                                ", "  +  note_key +
+                                ", "  +  last_pic +
+                                ", " + $('.title_box_input').val() +
+                                ", " + cate +
+                                ", " + $('.content_box_input').val()+ 
+                                ", "  + g_wido +
+                                ", "  +  g_gyungdo;
+                }
+
+            if(confirm("저장 하시겠습니까?")){
+
+                        $.ajax({
+                            type:"GET", // 전송방식
+                            url: root + "/content_save", // 주소
+                            dataType:"json", // 받을 때 데이터 타입
+                            data:{data:params},
+                            async:false,
+                            success:function(response){
+
+                                //insert 성공 유무
+                                if(response == '1'){
+                                    alert("컨텐츠 작성이 완료되었습니다");
+                                    removeMarkers(); // Marker 배열 삭제
+                                    removeStroyMaker(); // StroryMarker 배열 삭제
+                                    closeNav();
+                                    $('#my_search_field').click();
+                                    $('.title_box_input').val('');
+                                    $('#cate_choose').val('');
+                                    $('.content_box_input').val('');
+                                    $("#cate_choose").val("none").prop("selected",true); // 카테고리 설정
+
+                                }else{
+                                    alert("컨텐츠를 다시 작성해 주세요.");
+                                }
+                            },error:function(err){
+                                // 서버와 통신이 실패일 때
+                                console.log("error:" + err);
+                            }
+                        }); 
+                        // $.ajax({ END
+                }
+            });
+            // $('#content_save').click(function() { END
+
+            // 삭제버튼 클릭시
+            $('#content_delete').click(function() {
+                
+                if(confirm("삭제 하시겠습니까?")){
+
+                    var params =  note_key;
+
+                    $.ajax({
+                        type:"GET", // 전송방식
+                        url:root +"/content_delete", // 주소
+                        dataType:"json", // 받을 때 데이터 타입
+                        data:{data:params},
+                        async:false,
+                        success:function(response){
+
+                            //insert 성공 유무
+                            if(response == '1'){
+                                alert("컨텐츠 삭제가 완료되었습니다");
+                                removeMarkers();
+                                closeNav(); // 창 닫기
+                                removeStroyMaker(); // 마커 배열 삭제
+                                $('#my_search_field').click();
+                                $('.title_box_input').val('');
+                                $('#cate_choose').val('');
+                                $('.content_box_input').val('');
+                            }else{
+                                alert("컨텐츠를 다시 확인해 주세요.");
+                            }
+                        },error:function(err){
+                            // 서버와 통신이 실패일 때
+                            console.log("error:" + err);
+                        }
+                    }); 
+                    // $.ajax({ END
+                }
+            });
+            // $('#content_delete').click(function() { END
+
+            // 로그아웃
+            $("#logout").click(function() {
+                if(confirm("로그아웃 하시겠습니까?")){
+                    request();
+                    logout_setting();
+                }
+            });
+            // $("#logout").click(function() { END
+            function request() {
+                var loginid = sessionStorage.getItem("id"); // 보내는 사람
+
+                return $.ajax({
+                    type: "GET",
+                    url: root+"/logout",
+                    data: {data:loginid},
+                    async: true
+                }); // .responseText
+            }
+        
+            // 내가 올린 것 만 조회
+            $('#my_search_field').click(function() {
+                
+                var params = user_id; 
+                // my 버튼 on
+                if(my_count ==1){
+                    removeMarkers();//마커 초기화
+                    document.getElementById("my_search").src  = "image\\" + "my_onclick" + "." + "png"; // 내핀 버튼 초기화
+                    document.getElementById("pin_add").src  = "image\\" + "pin_add" + "." + "png"; // 핀추가 버튼 초기화
+                    add_count = 0;//핀추가 변수 초기화
+                    my_count = 0; //내핀 변수 초기화
+                    current_location();//내위치 찾기
+                    
+                    $.ajax({
+                        type:"GET", // 전송방식
+                        url:root +"/my_marker_select", // 주소
+                        dataType:"json", // 받을 때 데이터 타입
+                        data:{data:params},
+                        async:false,
+                        success:function(response){
+
+                            // 나의 마커 성공 유무
+                            if(response){
+                                // console.log(response);
+                                count = 0; // on/off 한 후 다시 on누를때 값을 못받아오는 오류 방지하기 위해
+                                for(i = 0 ; i < response.length; i++){
+                                    if(response[i][4] == "먹거리"){
+                                        icon_img="http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png";
+                                    }else{
+                                        icon_img="http://tmapapis.sktelecom.com/upload/tmap/marker/pin_g_m_s.png";
+                                    }
+                                    marker = new Tmapv2.Marker({    
+                                    position : new Tmapv2.LatLng(response[i][6],response[i][7]),//지도 초기 마커
+                                    icon: icon_img,
+                                    map : map//marker가 표시될 map 설정
+                                    });
+
+                                    key = response[i][0];       // notice_key 저장
+                                    u_id = response[i][1];      // id 저장
+                                    img = response[i][2];       // 이미지 저장
+                                    title = response[i][3];     // 제목 저장
+                                    choose = response[i][4];    // 카테고리 저장
+                                    detail = response[i][5];    // 내용 저장
+                                    wido = response[i][6];      // 위도 저장
+                                    gyungdo = response[i][7];   // 경도 저장
+                                    note_key = key
+                                    marker_img = img
+                                    // 마커 고유 아이디 = count
+                                    // 마커에 고유 아이디 부여하기 위함
+                                    addListener2(marker, count, u_id, wido, gyungdo, note_key);
+                                    
+                                    // 아이디 증가
+                                    count++;
+                                    // openListner();
+                                    storymarker.push(marker);
+
+                                    // 배열에 값 저장
+                                    var positions = [note_key, u_id, img, title, choose, detail, wido, gyungdo ];
+
+                                    // 배열에 값 넣기
+                                    all_content.push(positions);
+
+                                }   
+
+                            }
+                        },error:function(err){
+                            // 서버와 통신이 실패일 때
+                            console.log("error:" + err);
+                        }
+                        
+                    });
+                    // $AJAX END
+
+                }
+                // my 버튼 off
+                else if(my_count == 0) {
+                    document.getElementById("my_search").src  = "image\\" + "my" + "." + "png"; // 사진 경로 설정
+                    my_count=1;
+                    removeAllContent(); // 저장된 값을 지우기 위해
+                    removeStroyMaker(); // 마커 지우기 위해
+                    closeNav(); // 
+                }
+                
+            });
+            // $('#my_search_field').click(function() { END
+            
+            // 핀 추가 버튼 클릭 시
+            $('#pin_add_field').click(function() {
+                // 핀 추가 버튼 off
+                if(add_count == 1) {
+                    document.getElementById("pin_add").src  = "image\\" + "pin_add" + "." + "png"; // 사진 경로 설정
+                    add_count = 0;
+                    map.addListener("click",onClick); //map에 클릭이벤트
+                    removeMarkers();
+                    current_location();
+                    closeNav();
+                }
+                // 핀 추가 버튼 on
+                else if(add_count == 0 ){
+                    document.getElementById("pin_add").src  = "image\\" + "pin_add_onclick" + "." + "png"; // 사진 경로 설정
+                    add_count = 1;
+                    map.addListener("click",onClick); //map에 클릭이벤트
+                    document.getElementById("my_search").src  = "image\\" + "my" + "." + "png"; // 사진 경로 설정
+                    my_count=1;
+                    removeStroyMaker();
+                    removeAllContent(); 
+                }
+            });
+            // $('#pin_add_field').click(function() { END
+
+            //게시판 클릭 이벤트    
+            $("#notice_table tbody").on("click", "tr" , function() {
+
+                //게시판의 notice_key 뽑는것
+                var v_key = $(this).children("#notice_key").text();
+                $("#content_add").hide();
+                $("#content_save").show();
+                $("#content_delete").show();
+                $("#save_font").text("수정");
+
+                var params = v_key;
+
+                $.ajax({
+                    type:"GET",//전송방식
+                    url:root +"/notice_select",    //주소
+                    dataType:"json", // 받을 때 데이터 타입
+                    data: {data:params},
+                    async : false,
+                    success:function(response){ // 이 xml 형태의 데이터를 args로 받음 (바깥으로부터 들어옴)             
+
+                        // data = response
+                        if(response) {
+                                $("#notice_board").css("display", "none");//게시판 페이지 닫기
+                                $("#input_cbox").css("display", "block");//설명창 페이지 닫기
+                                $("#sidenav_back").css("display", "block");//뒤로가기 버튼 닫기
+                                
+                                // notice_key 저장하기 위해
+                                note_key = response[0][0];
+
+                                // // image내용 잘라내기 위해
+                                var pic_name = response[0][2].split('/');            
+
+                                // 파일이름과 확장자 구분하기 위해
+                                var pic_ext = pic_name[1].split('.');
+
+                                // 카테고리 저장하기 위해
+                                var category_detail = response[0][4];
+
+                                marker_img = "image/" + pic_ext[0] + "." + pic_ext[1];
+                                document.getElementById("imgPlus").src  = "image\\" + pic_ext[0] + "." + pic_ext[1]; // 사진 경로 설정
+                                $(".title_box_input").val(response[0][3]); // 제목 설정
+                                if(category_detail == "먹거리"){
+                                    $("#cate_choose").val("food").prop("selected",true); // 카테고리 설정 (먹거리)
+                                } else {
+                                    $("#cate_choose").val("see").prop("selected",true); // 카테고리 설정 (볼거리)
+                                }
+                                $("#writer_box_content").text(response[0][1])
+                                $(".content_box_input").val(response[0][5]); // 내용 설정
+
+                            }       
+
+                    },error:function(err){
+                        // 서버와 통신이 실패일 때
+                        console.log("error:" + err);
+                    }
+
+
+                });
+            }); 
+            // $("#notice_table tbody").on("click", "tr" , function() { END
+
+            $("#content_add").click(function() {
+                $("#notice_board").css("display", "none");//게시판 페이지 닫기
+                $("#input_cbox").css("display", "block");//설명창 페이지 닫기
+                $("#sidenav_back").css("display", "block");//뒤로가기 버튼 닫기
+                document.getElementById("imgPlus").src  = "image\\" + "img_plus" + "." + "png"; // 초기 이미지
+                $(".title_box_input").val(""); // 제목설정
+                $("#cate_choose").val("none").prop("selected",true); // 카테고리 설정
+                $(".content_box_input").val(""); // 내용설정
+                $("#content_add").hide(); // 작성버튼 숨기기
+                $("#content_save").show(); // 저장버튼 보이게
+                $("#save_font").text("등록"); // 저장버튼 글자 등록으로 변경
+                if($("#content_save").text() == "등록") {
+                    $('#content_save').click();
+                } 
+            })
+        }); 
+        // $(document).ready(function() { END
+
+        // 마커에 고유 아이디 번호 받아옴
+        function addListener2(marker, count, u_id, wido, gyungdo, key){
+            marker.addListener("click", function(evt) {
+                openBox3(count, u_id, wido, gyungdo, key);
+                s_count = count;
+                s_wido = wido; // s_wido 에 wido 값 넣어줌
+                s_gyungdo = gyungdo; // s_gyungdo 에 gyungdo 값 넣어줌
+                s_u_id = u_id;
+                s_note_key = key;
+            });
+            
+        }
+        function maintain() {
+            // console.log(user_id)
+            return $.ajax({
+                type: "GET",
+                url: root+"/login_maintain",
+                data: {data:user_id},
+                async: true
+            }); // .responseText
+        }
+        // 로딩시 호출 함수
+         function initTmap(){
+            maintain();
+            my_location = 0; // 맵 생성 변수
+            $('#login_info').text(user_id + "님");
+            // console.log(user_id)
+            // , 가 있을때
+            if(para[1].indexOf(',') > -1){
+                getPara();
+            }
+            // %가 있을때
+            else if(para[1].indexOf('%') > -1){
+                
+                navigator.geolocation.getCurrentPosition(foundLocation, function(error){
+                    consol.log(error.message);
+                });
+            
+            }
+            // 지도에서 넘겨받은 로그인 아이디를 띄워주는 역할
+            
+        }   
+
+        // 지도에서 넘긴 위도, 경도, 카테고리 받기
+        function getPara() {
+            
+            var arr = para[1].split(","); // , 로 split해서 arr에 위도 경도 카테고리 저장
+            g_wido = arr[0]; // 위도 저장
+            
+            g_gyungdo = arr[1]; // 경도 저장
+            
+            e_s = arr[2]; // 카테고리 저장
+            
+            getMarker(g_wido,g_gyungdo,e_s);
+        }
+
+        function getMarker(g_wido,g_gyungdo,e_s) {
+            removeMarkers(); // 마커 초기화
+           
+           // map 생성
+            map = new Tmapv2.Map("map_div", {
+                center : new Tmapv2.LatLng(g_wido,g_gyungdo), // 지도 초기 좌표
+                width : "100%", // map의 width 설정
+                height : "100%",// map의 height 설정  
+                zoom : 14
+            });
+
+            // 지도에서 넘겨준 위도, 경도에 마커 생성
+            marker = new Tmapv2.Marker({
+                position : new Tmapv2.LatLng(g_wido,g_gyungdo),//지도 초기 마커
+                icon : "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_i.png",
+                content: openBox2(),
+                map : map//marker가 표시될 map 설정
+            });
+
+            // if($('#save_font').text() == "저장") 부분에서
+            // pic_wido , my_wido , g_wido로 조건 걸어줬기 때문에 꼭필요
+            pic_wido = ""; // 핀 생성해서 생긴 wido 값 "" 초기화
+            my_wido = ""; // 현재위치 값 "" 초기화
+            // 마커 클릭시
+            marker.addListener("click", function(evt) {
+                openBox2();  // 입력창열기(아래에서 위로)
+            });
+            markers.push(marker);//마커 배열에 넣기
+        }
+
+        // // 아이디 정보를 지도로 넘기기
+        function map_link(){
+            var ui = sessionStorage.getItem("id");
+            location.href = "WinMap.html?'"+ui +"'";
+        }
+
+        //현재 위치를 찾아 표시하는 함수
+        function foundLocation(position){
+
+            latitud = position.coords.latitude; // 위도
+            longitude = position.coords.longitude; //경도
+
+            // 맵 생성 변수 값이 0일때 맵 생성
+            if(my_location == 0){
+                map = new Tmapv2.Map("map_div", {
+                    center : new Tmapv2.LatLng(latitud,longitude), // 지도 초기 좌표
+                    width : "100%", // map의 width 설정
+                    height : "100%",// map의 height 설정  
+                    zoom : 14
+                });
+            }
+
+            // 현재 위치 마커 생성
+            marker = new Tmapv2.Marker({
+                position : new Tmapv2.LatLng(latitud,longitude),//지도 초기 마커
+                icon :"http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_i.png", 
+                map : map//marker가 표시될 map 설정
+            });
+            // 현재위치 값들을 my_% 변수에 저장
+            my_wido = latitud;
+            my_gyungdo = longitude;
+            // if($('#save_font').text() == "저장") 부분에서
+            // pic_wido , my_wido , g_wido로 조건 걸어줬기 때문에 꼭필요
+            g_wido = ""; // g_wido 값 "" 초기화
+            g_gyungdo = "";
+            pic_wido = ""; // pic_wido 값 "" 초기화
+            pic_gyungdo = "";
+            // 마커 클릭 시
+            marker.addListener("click", function(evt) {
+                openBox();  // 입력창열기(아래에서 위로)
+            });
+
+            markers.push(marker);
+            my_location = 1; // 맵 생성 변수
+        }
+
+        //지도 클릭 이벤트
+        function onClick(e){
+            
+            // 핀추가 버튼을 off 했을때
+            if(add_count == 0){
+                return false;
+            }
+            // 마커 초기화
+            for(var i = 0; i < markers.length; i++){
+                markers[i].setMap(null);
+            }
+            lonlat = e.latLng;
+            marker = new Tmapv2.Marker({
+                position : new Tmapv2.LatLng(pic_wido = lonlat.lat(),pic_gyungdo = lonlat.lng()),//클릭한 위치 좌표 설정
+                map : map, //marker가 표시될 map 설정
+                icon : "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_i.png",
+                draggable : true
+            });
+            // 다른 부분에서 lonlat.lat() 사용 못하기 때문
+            // 좌표값을 pic_% 변수에 넣어줌
+
+            // 지도 클릭하여 마커 생성시 url로 받아온 위/경도 초기화
+
+            // if($('#save_font').text() == "저장") 부분에서
+            // pic_wido , my_wido , g_wido로 조건 걸어줬기 때문에 꼭필요
+            g_gyungdo = ""; 
+            g_wido = ""; // g_wido 값 "" 초기화
+            my_gyungdo = "";
+            my_wido = ""; // my_wido 값 "" 초기화
+            
+            marker.addListener("click", function(evt) {
+                openBox();  // 입력창열기(아래에서 위로)
+            });
+            markers.push(marker); // 마커 배열에 넣기
+            
+        }
+        
+        //마커 초기화
+        function removeMarkers(){
+            for(var i = 0; i < markers.length; i++){
+                markers[i].setMap(null);
+            }//클릭 마커 없애기
+            markers = [];//마커 배열 초기화
+        }
+
+        function removeStroyMaker(){
+            for(var i = 0; i < storymarker.length; i++){
+                storymarker[i].setMap(null);
+            }//클릭 마커 없애기
+            storymarker = [];//마커 배열 초기화
+        }
+
+        function removeAllContent(){
+            all_content = [];//마커 배열 초기화
+        }
+
+        // 입력박스 닫기
+        function closeNav(){
+            document.getElementById("input_box").style.height = "0";
+            document.getElementById("imgPlus").src  = "image\\" + "img_plus" + "." + "png";
+            $(".title_box_input").val(""); // 제목설정
+            $("#cate_choose").val("none").prop("selected",true); // 카테고리 설정
+            $(".content_box_input").val(""); // 내용설정
+        }
+       
+        //게시판 뒤로가기
+        function backNav(){
+            openBox3(s_count, s_u_id, s_wido, s_gyungdo, s_note_key);
+            // $('#sidenav_back').hide();
+            // $('#notice_board').show();
+            $('#content_add').show(); // 작성버튼 보이게 하기
+            $("#content_save").hide(); // 저장버튼 숨기기
+            $("#content_delete").hide(); // 삭제버튼 숨기기
+        }
+
+        //현재 내위치 찍는곳
+        function current_location(){
+            removeMarkers();
+            map.setCenter(new Tmapv2.LatLng(latitud,longitude)); // 화면 중앙 설정
+            map.setZoom(14); // 확대
+            my_location = 1;
+            navigator.geolocation.getCurrentPosition(foundLocation, function(error){
+                    consol.log(error.message);
+                });
+        }
+
+        //글로벌 버튼 이벤트
+        function world(){
+            map.setZoom(8); //지도 확대값
+        }
+
+        // 이미지 추가
+        function insert_img() {
+            document.getElementById("img_search").click();
+            var filepath = img_search.value;
+            //전체경로를 \ 나눔.
+            var filePathSplit = filepath.split('\\'); 
+            //전체경로를 \로 나눈 길이.
+            var filePathLength = filePathSplit.length;
+            //마지막 경로를 .으로 나눔.
+            var fileNameSplit = filePathSplit[filePathLength-1].split('.');
+            //파일명 : .으로 나눈 앞부분
+            var fileName = fileNameSplit[0];
+            var filetag = fileNameSplit[1];
+            
+            document.getElementById("imgPlus").src  = "image/" + fileName + "." + filetag;
+            marker_img = "image/" + fileName + "." + filetag;
+            
+        }
+
+        
+
+        function logout_setting(){
+            sessionStorage.setItem("id", "");
+            location.href="WinMap.html";
+            document.getElementById("i_user_id").value = "";
+            document.getElementById("i_user_pwd").value = "";
+            document.getElementById("i_user_id").focus(); // 로그인 div 포커스 설정
+            document.getElementById("login_set").style.display = "block";
+            document.getElementById("map_div").style.opacity = "0.5"; // 뒷배경 투명도 설정
+            document.getElementById("map_div").style.pointerEvents = "none"; // 지도 마우스 이벤트
+            closeNav();
+        }
+
+        // 사진 등록, 글 등록 하는 입력박스
+        function openBox(){
+            document.getElementById("input_box").style.height = "58%";
+            $(".title_box_input").val(""); // 제목설정
+            $(".content_box_input").val(""); // 내용설정
+            $("#save_font").text("저장");
+            $("#content_delete").hide(); // 삭제버튼 숨기기
+            $("#notice_board").css("display", "none");//게시판 페이지 닫기
+            $("#input_cbox").css("display", "block");//설명창 페이지 닫기
+            $("#sidenav_back").css("display", "block");//뒤로가기 버튼 닫기
+            document.getElementById("imgPlus").src  = "image\\" + "img_plus" + "." + "png"; // 초기 이미지
+            $("#content_add").hide(); // 작성버튼 숨기기
+            $("#content_save").show(); // 저장버튼 보이게
+            $("#sidenav_back").hide(); // 뒤로가기버튼 숨기기
+            
+        }
+
+        // 지도에서 작성버튼 눌렸을 때 켜지는 입력창
+        function openBox2(){
+            
+            document.getElementById("input_box").style.height = "58%";
+            $(".title_box_input").val(""); // 제목설정
+            if(e_s == 1){
+                $("#cate_choose").val("food").prop("selected",true); // 카테고리 설정(먹거리)
+            } else if(e_s == 2){
+                $("#cate_choose").val("see").prop("selected",true); // 카테고리 설정 (볼거리)
+            } else {
+                $("#cate_choose").val("none").prop("selected",true); // 카테고리 설정
+            }
+            $(".content_box_input").val(""); // 내용설정
+            $("#save_font").text("저장");
+            $("#content_delete").hide(); // 삭제버튼 숨기기
+            $("#notice_board").css("display", "none");//게시판 페이지 닫기
+            $("#input_cbox").css("display", "block");//설명창 페이지 닫기
+            $("#sidenav_back").css("display", "block");//뒤로가기 버튼 닫기
+            document.getElementById("imgPlus").src  = "image\\" + "img_plus" + "." + "png"; // 초기 이미지
+            $("#content_add").hide(); // 작성버튼 숨기기
+            $("#content_save").show(); // 저장버튼 보이게
+            $("#sidenav_back").hide(); // 뒤로가기버튼 숨기기
+        }
+
+        // 사진 등록, 글 등록 하는 입력박스
+        function openBox3(count, u_id, wido, gyungdo, note_key){
+            $("#input_cbox").css("display", "none");//설명창 페이지 닫기
+            $("#sidenav_back").css("display", "none");//뒤로가기 버튼 닫기
+            $("#notice_board").css("display", "block");//게시판 페이지 열기
+            document.getElementById("imgPlus").src  = first_img;//뒤로가기 이미지 초기화
+            $("#content_save").hide(); // 저장버튼 숨기기
+            $("#content_delete").hide(); // 삭제버튼 숨기기
+            $("#content_add").show(); // 작성버튼 숨기기
+            //게시판으로 초기화
+            // backNav();
+
+            var params = wido +"," + gyungdo + "," + u_id; // 위경도 값 가져오기
+                
+            $.ajax({
+                type:"GET",//전송방식
+                url:root +"/c_marker_click",    //주소
+                data:{data:params}, //데이터
+                dataType:"json", // 받을 때 데이터 타입  
+                async : false,
+                success:function(response){ // 이 xml 형태의 데이터를 args로 받음 (바깥으로부터 들어옴)             
+                    // xml 형태니깐 parsing 작업을 해서 받아야함
+                    // console.log(response)
+                    if(response) {
+                        $("#notice_table > tbody").empty();
+                        // image내용 잘라내기 위해
+                        var pic_name = response[0][1].split('/');            
+
+                        // 파일이름과 확장자 구분하기 위해
+                        var pic_ext = pic_name[1].split('.');
+                        first_img = "image\\" + pic_ext[0] + "." + pic_ext[1]; // 사진 경로 설정
+                        //첫번째 조회된거 이미지 띄우기
+                        document.getElementById("imgPlus").src  = first_img;
+                        
+                        for(var i = 0 ; i < response.length; i++){
+                            $("#notice_table > tbody").append($("<tr>"
+                                                +"<td id = 'notice_key' style = 'display:none;'>" + response[i][5] + "</td>"
+                                                +"<td style = 'max-width:100px;' >" + (i+1) + "</td>"
+                                                +"<td style = 'max-width:150px;'>" + response[i][2] + "</td>"
+                                                +"<td style = 'max-width:600px;'>" + response[i][3] + "</td>"
+                                                +"<td style = 'max-width:150px;'> " + response[i][0] + "</td>"
+                                                +"<td style = 'max-width:250px;'>" + response[i][4] + "</td>"
+                                                +"<td style = 'max-width:100px;'>" + response[i][6] + "</td></tr>"));
+                        }
+                                
+                        document.getElementById("input_box").style.height = "58%";
+                    }       
+
+                },error:function(err){
+                    // 서버와 통신이 실패일 때
+                    console.log("error:" + err);
+                }
+            });
+                // 
+        }
+    </script>
+</body>
+</html>
+
+

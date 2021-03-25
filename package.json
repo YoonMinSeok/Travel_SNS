@@ -1,0 +1,25 @@
+{
+  "name": "ktiss",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "async": "^3.2.0",
+    "asynx": "0.0.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "finalhandler": "^1.1.2",
+    "oracledb": "^5.0.0",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://192.168.0.36:911/KTISS.git"
+  },
+  "author": "",
+  "license": "ISC"
+}

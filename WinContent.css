@@ -1,0 +1,560 @@
+html,body{
+    margin : 0; 
+    padding: 0;
+    width : 100%;
+    height : 100%;
+} 
+
+a{
+    text-decoration : none;
+}
+
+#map_div {
+    width : 100%;
+    height : 100%;
+    overflow : hidden; /* 스크롤 이동하지 않도록 고정 */
+    z-index : 0; /* 우선순위 가장 낮음 */
+    position: relative;
+}
+/*  */
+
+/* 지도부분 위치 설정 */
+#all_world{
+    position: absolute;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 70px;
+    height: 45px;
+    margin: 20px 20px 20px 20px;
+    bottom :0 ;
+    left : 0;
+    z-index : 10; 
+    text-align: center;
+    background-color: #006699;
+    font-weight: bold;
+}
+
+/* 지도 여백 설정 */
+#w_margin {
+    margin-top: 10px;
+    vertical-align: center;
+}
+
+/* 지도 글자 설정 */
+#w_font {
+    margin-top: 10px;
+    color: white;
+}
+
+
+/* 로그아웃 버튼 영역 */
+#logout_field {
+    position: absolute;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 60px;
+    height: 35px;
+    margin: 20px 20px 40px 0;
+    bottom :0 ;
+    right : 0;
+    z-index : 10; 
+    text-align: center;
+    background-color: #006699;
+    float: left;
+}
+
+/* 로그아웃 그림 설정 */
+#logout {
+    width: 40px;
+    height: 15px; 
+    margin-top: 10px;
+}
+
+/* 로그인 정보 뿌려주는 영역 설정 */
+#login_info_field {
+    position: absolute;
+    z-index: 10;    
+    margin: 20px 95px 38px 20px;
+    bottom :0 ;
+    right: 0;
+    text-align: center;
+}
+
+/* 로그인 정보 글자 설정 */
+#login_info {
+    font-weight: bold;
+    font-size: 18px;
+    display: block;
+    border-radius: 10px;;
+    color: white;
+    background-color: #006699;
+}
+
+/* 환영합니다 글자 설정 */
+#login_greet {
+    font-size: 18px;
+}
+
+/* 현재위치 디자인 */
+#i_gps {
+    position: absolute;
+    border-radius: 5px; /* 모서리 부분 라운딩 처리 */
+    cursor: pointer;
+    width: 50px;
+    height: 33px;
+    top: 0; /* 위쪽으로 붙게끔 */
+    right: 0; /* 오른쪽으로 붙게끔 */
+    margin: 20px 50px 0 20px;
+    text-align: center;
+    z-index : 2; 
+    background-color: #EAEAEA;
+}
+
+/* 현재위치 이미지 설정 */
+#gps_click {
+    width: 33px;
+    height: 33px;
+}
+
+/* world 디자인 */
+#i_world {
+    position: absolute;
+    border-radius: 5px; /* 모서리 부분 라운딩 처리 */
+    cursor: pointer;
+    width: 50px;
+    height: 33px;
+    top: 0; /* 위쪽으로 붙게끔 */
+    right: 0; /* 오른쪽으로 붙게끔 */
+    margin: 70px 50px 0 20px;
+    z-index : 2; 
+    background-color: #EAEAEA;
+    text-align: center;
+}
+
+#earth_click {
+    width: 33px;
+    height: 33px;
+}
+
+
+/* 내가 입력한 마커 조회 버튼 영역 */
+#my_search_field {
+    position: absolute;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 50px;
+    height: 33px;
+    margin: 120px 50px 0 20px;
+    top :0 ;
+    right: 0;
+    z-index : 10; 
+    text-align: center;
+    background-color: #EAEAEA;
+}
+
+/* 내가 입력한 마커 조회 설정 */
+#my_search {
+    width: 30px;
+    height: 28px; 
+    padding: 2px;
+}
+
+/* 핀 추가 버튼 영역 */
+#pin_add_field {
+    position: absolute;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 50px;
+    height: 33px;
+    margin: 170px 50px 0 20px;
+    top :0 ;
+    right: 0;
+    z-index : 10; 
+    text-align: center;
+    background-color: #EAEAEA;
+}
+
+/* 핀 추가 버튼 사진 크기 설정 */
+#pin_add {
+    width: 30px;
+    height: 33px; 
+}
+
+/* 입력하는 박스 디자인 */
+.sidenav  {
+    height: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 99;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    overflow-x: hidden; /* 부모요소의 범위를 넘어가는 자식 요소의 부분은 보이지 않도록 하기 위함 */
+    transition:height 1.5s; /* 위로 올라가는 시간을 0.5초로 설정 */
+    padding-top:0;
+    text-align:center;
+}
+
+/* 저장 닫기 묶은 div */
+#save_or_close {
+    margin-top: 10px;
+    width : 100%;
+    height : 50px;
+}
+
+/* 뒤로가기버튼 */
+#sidenav_back {
+    width: 120px;
+    height: 40px;
+    cursor: pointer;
+    background-color: cyan;
+    border-radius: 20px;
+    margin-right: 10px;
+    margin-left: 10px;
+    float: left;
+    text-align: center;
+    display : none;
+}
+/* 뒤로가기버튼 이미지 설정 */
+#back_close {
+    width: 30px;
+    height: 30px;
+    padding-top: 5px;
+    float: left;
+    padding-left: 5px;
+}
+
+/* 뒤로가기 글자 설정 */
+#back_font {
+    width: 80px;
+    height: 40px;
+    padding-top: 9px; 
+    padding-right: 3px;
+    float: right;
+}
+
+/* 삭제버튼 */
+#content_delete {
+    width: 80px;
+    height: 40px;
+    cursor: pointer;
+    background-color: white;
+    border: 2px solid red;
+    border-radius: 20px;
+    margin-right: 10px;
+    float: right;
+    text-align: center;
+}
+
+/* 삭제버튼 이미지 설정 */
+#btn_delete {
+    width: 30px;
+    height: 30px;
+    padding-top: 5px;
+    float: left;
+    padding-left: 5px;
+}
+
+/* 삭제 글자 설정 */
+#delete_font {
+    width: 40px;
+    height: 40px;
+    padding-top: 9px; 
+    padding-right: 3px;
+    float: right;
+}
+
+/* 저장버튼 */
+#content_save {
+    width: 80px;
+    height: 40px;
+    cursor: pointer;
+    background-color: turquoise;
+    border-radius: 20px;
+    margin-right: 10px;
+    float: right;
+    text-align: center;
+}
+
+/* 저장버튼 이미지 설정 */
+#btn_save {
+    width: 30px;
+    height: 30px;
+    padding-top: 5px;
+    float: left;
+    padding-left: 5px;
+}
+
+/* 저장 글자 설정 */
+#save_font {
+    width: 40px;
+    height: 40px;
+    padding-top: 9px; 
+    padding-right: 3px;
+    float: right;
+}
+
+
+/* 작성버튼 */
+#content_add {
+    width: 80px;
+    height: 40px;
+    cursor: pointer;
+    background-color: turquoise;
+    border-radius: 20px;
+    margin-right: 10px;
+    float: right;
+    text-align: center;
+}
+
+/* 작성버튼 이미지 설정 */
+#btn_add {
+    width: 30px;
+    height: 30px;
+    padding-top: 5px;
+    float: left;
+    padding-left: 5px;
+}
+
+/* 작성 글자 설정 */
+#add_font {
+    width: 40px;
+    height: 40px;
+    padding-top: 9px; 
+    padding-right: 3px;
+    float: right;
+}
+
+/* 닫기버튼 */
+#sidenav_close {
+    width: 80px;
+    height: 40px;
+    cursor: pointer;
+    background-color: tomato;
+    border-radius: 20px;
+    margin-right: 10px;
+    float: right;
+    text-align: center;
+}
+
+/* 닫기버튼 이미지 설정 */
+#btn_close {
+    width: 30px;
+    height: 30px;
+    padding-top: 5px;
+    float: left;
+    padding-left: 5px;
+}
+
+/* 닫기 글자 설정 */
+#close_font {
+    width: 40px;
+    height: 40px;
+    padding-top: 9px; 
+    padding-right: 3px;
+    float: right;
+}
+
+#input_cbox{
+    display: none;
+}
+
+/* 사진 글자 넣는 곳을 묶은 곳 설정 */
+#img_con_tie {
+    float: left;
+    margin-top : 20px;
+    width : 100%;
+    height : 400px;
+}
+
+/* 사진 영역 설정 */
+#img_tie {
+    width: 400px;
+    height: 355px;
+    margin-top: 30px;
+    margin-left: 30px;
+    float: left;
+}
+
+/* 사진 글자 설정 */
+#img_font{
+    text-align: left;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+/* 사진 넣는 영역 */
+#add_img {
+    left: 0;
+    width: 400px;
+    height: 400px;
+
+}
+
+/* 사진 탐색기 영역 */
+#img_search{
+    display: none;
+}
+
+/* 빈 사진 설정 */
+#imgPlus {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+/* 제목 영역 설정 */
+#title_tie {
+    width: 1430px;
+    height: 65px;
+    margin-top: 30px;
+    margin-left: 30px;
+    float: left;
+}
+
+/* 제목 카테고리 영역 */
+#tc_tie {
+    width: 1430px;
+    float: left;
+}
+
+/* 제목 글자 설정 */
+#title_font {
+    font-size: 25px;
+    text-align: left;
+    font-weight: bold;
+    width: 415px;
+    float: left;
+}
+
+/*게시판 전체영역*/
+#notice_board{
+    width : 1430px;
+    height : 450px;
+    float : right;
+    margin :10px 30px 0 0;
+}
+
+/* 게시판 글자 설정 */
+#notice_font {
+    font-size: 25px;
+    text-align: left;
+    font-weight: bold;
+    width: 100%;
+    height : 50px;
+    float: left;
+}
+
+/*게시판 테이블 설정*/
+#notice_table {
+    border-collapse: collapse;
+}
+
+/*게시판 테이블 헤더 색설정*/
+#notice_table th{
+    background-color: #c1c1c1;
+}
+
+/*게시판 테이블 선설정*/
+#notice_table tr th, td{
+    border: 1px solid black;
+    text-align: center;
+}
+
+/*게시판 테이블 설정*/
+#notice_table tr th, td{
+    border: 1px solid black;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/*게시판 테이블 hover설정*/
+#notice_table tr:hover{
+    background-color : #c1c1c1;
+    cursor: pointer;
+}
+
+/* 카테고리 글자 설정 */
+#category_font {
+    width: 500px;
+    font-size: 25px;
+    text-align: left;
+    font-weight: bold;
+    float: left;
+    margin-left: 15px;
+}
+
+/* 사진 옆 제목 입력하는 곳 */
+#title_box {
+    border-radius: 10px;
+    width: 415px;
+    height: 40px;
+    padding: 5px;
+    font-size: 12px;
+    float: left;
+}
+
+/* 제목 입력상자 설정 */
+.title_box_input {
+    width: 400px;
+    height: 25px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+/* 콤보박스 선택하는 영역 */
+#category_choose {
+    width: 500px;
+    height: 40px;
+    font-size: 15px;
+    padding: 5px;
+    float: left;
+}
+
+/* 콤보박스 위치 */
+#cate_choose {
+    width: 200px;
+    height: 40px;
+    /* margin-top: 5px; */
+    float: left;
+    border-radius: 10px;
+    border: 1px solid;
+}
+
+
+/* 내용 영역 설정 */
+#content_tie {
+    width: 1430px;
+    height: 300px;
+    margin-top: 15px;
+    margin-left: 30px;
+    float: left;
+    /* background-color: yellow; */
+}
+
+/* 내용 글자 설정 */
+#content_font {
+    float: left;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+/* 사진 옆 내용 입력하는 곳 */
+#content_box {
+    border-radius: 10px;
+    width: 1430px;
+    height: 300px;
+    float: left;
+    padding: 5px;
+    font-size: 12px;
+}
+
+/* 내용 입력상자 설정 */
+.content_box_input {
+    width: 1415px;
+    height: 285px;
+    padding: 5px;
+    border-radius: 10px;
+}

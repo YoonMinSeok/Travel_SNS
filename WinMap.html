@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>WinMap</title>
+        
+        <script src="//code.jquery.com/jquery-3.2.1.min.js">
+        </script>
+
+        <script
+        src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=l7xxe76de30a5bad412fabfa1ca26bd2eefe">
+        </script>
+
+        <!-- js 파일 연결 -->
+
+        <link rel="stylesheet" type="text/css" href="WinMapCss.css">
+    </head>
+    <body onload="initTmap()"> <!-- 맵 생성 실행 --> 
+
+        <!-- 로그인 페이지 -->
+        <div id="login_set">
+            <span id="login_text">로그인</span> <span id="login_x_btn" onclick="">&times;</span>
+                <!-- 아이디 비밀번호 묶는 영역 -->
+                <div id="id_pwd_tie">
+                    <!-- 아이디 -->
+                    <div id="id_tie">
+                        <span class="id_text">아이디 : </span>
+                        <input type="text" id="i_user_id" maxlength="10">
+                    </div><!-- 아이디 END-->
+                    <!-- 비밀번호 -->
+                    <div id="pwd_tie">
+                        <span class="pwd_text">비밀번호 : </span>
+                        <input type="password" id="i_user_pwd" maxlength="20">
+                    </div><!-- 비밀번호 END -->
+                </div><!-- 아이디 비밀번호 묶는 영역 END -->
+                <!-- 버튼 묶는 영역 -->
+                <div id = "id_btn">
+                    <input type = "button" value = "로그인" id="loginBtn">
+                    <input type = "button" value = "회원가입" id ="signupBtn" onclick="">
+                </div><!-- 버튼 묵는 영역 END -->
+        </div><!-- 로그인 페이지 END -->
+<!-- 회원가입 -->
+        <!-- 회원가입 페이지 -->
+        <div id="join_set">
+            <span id="join_text">회원가입</span> <span id="sign_x_btn" onclick="">&times;</span>
+                <!-- 모든 입력 부분 묶는 영역 -->
+                <div id="all_input_tie">
+                    <!-- 아이디 -->
+                    <div id="join_tie">
+                        <span class="join_id_text">아이디 : </span>
+                        <input type="text" id="join_user_id" maxlength="10">
+                    </div><!-- 아이디 END-->
+                    <!-- 비밀번호 -->
+                    <div id="join_tie">
+                        <span class="join_pwd_text">비밀번호 : </span>
+                        <input type="password" id="join_user_pwd" maxlength="20">
+                    </div><!-- 비밀번호 END -->
+                    <!-- 이름 -->
+                    <div id= "join_tie">
+                        <span class="join_name_text">이름 : </span>
+                        <input type="text" id="join_user_name" maxlength="20" oninput="this.value = this.value.replace(/[^a-zA-Zㄱ-힣]/g, '');">
+                    </div><!-- 아이디 END-->
+                    <!-- 생년월일 -->
+                    <div id="join_tie" >
+                        <span class="join_birth_text">주민등록번호 : </span>
+                        <input type="text" id="join_user_front_id" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '');"> - 
+                        <input type="text" id="join_user_back_id" maxlength="7" oninput="this.value = this.value.replace(/[^0-9]/g, '');"> 
+                    </div><!-- 생년월일 END-->
+                    <!--전화번호-->
+                    <div id = "join_tie">
+                        <span class="join_birth_text">전화번호 : </span>
+                        <input type="text" id="join_phone_1" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '');"> - 
+                        <input type="text" id="join_phone_2" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '');"> -
+                        <input type="text" id="join_phone_3" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '');"> 
+                    </div><!--전화번호 END-->
+                </div><!-- 모든 입력 부분 묶는 영역 END -->
+                <!-- 버튼 묶는 영역 -->
+                <div id = "join_id_btn">
+                    <input type = "button" value = "가입" id="join_btn">
+                    <input type = "button" value = "취소" id = "sign_cancel" onclick="">
+                </div><!-- 버튼 묵는 영역 END -->
+        </div><!-- 회원가입 페이지 END -->
+
+            <div id="map_div"> <!-- 맵 출력되는 부분 --> 
+
+            <!-- 모든 스토리 버튼 -->
+            <div id="all_story_gps">
+                <!-- 그림 출력되는 부분 -->
+                <img src = "image/pin_gps.png" id="toggle_left_pin">
+                <!-- 글자 출력되는 부분 -->
+                <label class="switch">
+                    <input type="checkbox" id="story_toogle_input">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <!-- 모든 스토리 버튼 END -->
+
+            <!-- 먹거리 토글 버튼 -->
+            <div id="eat_toggle">
+                <!-- 그림 출력되는 부분 -->
+                <img src="image/food.png" id="toggle_left">
+                <!--토글 버튼 부분 -->
+                <label class="switch">
+                    <input type="checkbox" id="eat_toogle_input">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <!-- 먹거리 토글 버튼 END-->
+
+            <!-- 볼거리 토글 버튼 -->
+            <div id="see_toggle">
+                <!-- 그림 출력되는 부분 -->
+                <img src="image/see.png" id="see_toggle_left">
+                <!--토글 버튼 부분 -->
+                <label class="switch">
+                    <input type="checkbox" id="see_toogle_input">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <!-- 볼거리 토글 버튼 END-->
+
+            <!--오른쪽 네비 부분-->
+                <div id = "rn_wrap" style="width: 0%;">
+                    <div id = "right_button" >
+                        <img src = "image/btn_left.png" id = "right_nav_button_img">
+                    </div>
+                    <div id = "right_nav">
+                        
+                        <!--네비 윗부분-->
+                        <div id = "rn_top">
+                            <div id = "rn_top_userimg">
+                                <img src = "image/person.png" id = "userimg">
+                            </div>
+                            <!-- 로그인 정보를 뿌려주는 부분 -->
+                            <div id="login_info_field">
+                                <span id="login_info"></span>
+                                <span id="login_greet">환영합니다.</span>
+                            </div>
+                            <!-- 로그인 정보를 뿌려주는 부분 END -->
+
+                            <!-- 로그아웃 버튼 -->
+                            <div id="logout_field" onclick="">
+                                <img src="image/logout.png" id="logout">
+                            </div>
+
+                        </div>
+                        <!--네비 윗부분 END-->
+
+                        <!--네비 채팅리스트 -->
+                        <div id = "right_chat">
+                        </div>
+                        <!--네비 채팅리스트 END-->
+
+                    </div>
+                </div>
+            <!--오른쪽 네비 부분 END-->
+
+            <!-- 현재위치버튼 -->
+            <div id="i_gps" onclick="current_location()">
+                <img src="image/gps.png" id="gps_click">
+            </div><!-- 현재위치버튼 END -->
+
+            <!-- 지구버튼 -->
+            <div id="i_world" onclick="world()">
+                <img src="image/earth.png" id="earth_click">
+            </div> <!-- 지구버튼 END -->
+
+            <!-- 컨텐츠 부분 -->
+            <div id="all_world">
+                <!-- <img src="image/map.png" id="world"> -->
+                <div id="w_margin"><a id="w_font" onclick = "content_link()">컨텐츠</a></div>
+            </div>
+         
+            </div><!-- 맵 END --> 
+            
+            <!-- 입력하는 박스 -->
+            <div id="input_box" class="sidenav">
+                <!-- 닫기와 뒤로가기버튼 묶기 위함 -->
+                <div id="save_or_close">
+
+                    <!-- 뒤로가기버튼 -->
+                    <div id="sidenav_back" onclick="backNav()">
+                        <img src="image/back.png" id="back_close">
+                        <div id="back_font">뒤로가기</div>
+                    </div> <!-- 뒤로가기버튼 END -->
+
+                    <!-- 닫기버튼 -->
+                    <div id="sidenav_close" onclick="closeNav()">
+                        <img src="image/btn_close1.png" id="btn_close">
+                        <div id="close_font">닫기</div>
+                    </div> <!-- 닫기버튼 END -->
+                     <!-- 작성버튼 -->
+                     <div id="sidenav_modified" onclick="modifiedNav()">
+                        <img src="image/pen.png" id="modified_close">
+                        <div id="modified_font">작성</div>
+                    </div> <!-- 작성버튼 END -->
+
+
+                </div> <!-- 닫기와 뒤로가기버튼 묶는 div end -->
+                
+                <!-- 사진과 글자 넣는 곳을 묶는 div -->
+                <div id="img_con_tie">
+                    <!-- 사진 넣는 곳 -->
+                    <div id="img_tie">
+                        <div id="img_font">
+                            사진
+                        </div>
+                        <div id="add_img">
+                            <img src="image/img_plus.png" id="imgPlus" readonly>
+                            <input type="file" id="img_search">
+                        </div>
+                    </div><!-- 사진 넣는 곳 END -->
+                    
+                    <!-- 게시판 -->
+                    <div id = "notice_board">
+                        <div id = "notice_font">
+                            게시판
+                        </div>
+                        <table id = "notice_table" style ="table-layout:fixed">
+                            <thead>
+                                 <th width=100>글번호</th>
+                                 <th width=150>제목</th>
+                                 <th width=600>내용</th>
+                                 <th width=150>작성자</th>
+                                 <th width=250>작성일</th>
+                                 <th width=100>조회수</th> 
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                    <!-- 게시판 -->
+
+                    <!-- 제목밑 내용 넣는 곳 -->
+                    <div id = "input_cbox">
+                        <!-- 제목 넣는 곳 -->
+                        <div id="title_tie">
+                            <div id="tc_tie">
+                                <div id="title_font">
+                                    제목
+                                </div>
+                                <div id="category_font">
+                                    카테고리
+                                </div>
+                                <div id = "writer_font">
+                                    작성자
+                                </div>
+                            </div>
+                            <div id="tc_i_tie">
+                                <div id="title_box">
+                                    <input type="text" class="title_box_input" readonly>
+                                </div>
+                                <div id="category_choose">
+                                    <select name="cate_choose" id="cate_choose">
+                                        <option value="none">선택하세요</option>
+                                        <option value="food">먹거리</option>
+                                        <option value="see">볼거리</option>
+                                    </select>
+                                </div>
+                                <div id = "writer_box">
+                                    <span id = "writer_box_content"></span>
+                                    <img src = "image/talk.png" id = "talk" onClick="chatopen()">
+                                </div>
+
+                                
+                            </div>
+                        </div><!-- 제목 넣는 곳 END -->
+
+                        <!-- 내용 넣는 곳 -->
+                        <div id="content_tie">
+                            <div id="content_font">
+                                내용
+                            </div>
+                            <!-- contenteditable="true" => div에 입력할 수 있게끔 -->
+                            <div id="content_box">
+                                <input type="text" class="content_box_input" readonly>
+                            </div>
+                        </div><!-- 내용 넣는 곳 END -->
+                    </div>   <!-- 제목밑 내용 넣는 곳 -->
+                </div><!-- 사진과 글자 넣는 곳을 묶는 div END-->
+                
+            </div> <!-- 입력하는 박스 끝 -->
+           
+
+        <script type="text/javascript">
+            var first_img; // 첫번째 이미지 담는곳
+            var marker_img; // 이미지 담는곳
+            var eat_count = 0;
+            var see_count = 0;
+            var story_count = 0;//토글 변수
+            var map,marker; 
+            var lonlat;
+            var loginid;//로그인 확인용
+            var storymarker = [] // 스토리 마커 저장
+            var markers = []; // 마커 저장
+            var latitud , longitude; // 위도 경도
+            var centerLL;
+            var all_content =[]; // notice_key, id, 사진, 제목, 카테고리, 내용, 위도, 경도를 저장하기 위한 배열
+            var title, key, detail, img, choose, u_id, wido, gyungdo; // 제목, notice_key, 이미지, 카테고리, 아이디
+            var count = 0; // 마커 고유아이디 부여하기 위해
+            var right_nav_count = 0;
+            var s_wido, s_gyungdo,s_choose,s_count; // 위/경도를 보내주기 위해 선언 
+            var right_chat = document.getElementById('right_chat');
+            // var get_user; // 메세지 받는 사람 아이디 저장(목록)
+            var root = "//localhost:8082";
+            var l_message = "";
+            var no_read_message_cnt; // 안읽은 메세지 카운트 저장하는 변수
+            // var socket = io();
+            //JQuery 시작
+        	$(document).ready(function() {
+
+                $("#right_button").click(function(){
+                    if(right_nav_count == 0){
+                        document.getElementById("rn_wrap").style.width = "25%";
+                        document.getElementById("right_nav").style.width = "80%";
+                        document.getElementById("rn_wrap").style.zindex = 99;
+                        document.getElementById("right_button").style.marginRight = "80%";
+                        document.getElementById("right_nav_button_img").src  = "image/btn_right.png"; // 사진 경로 설정
+                        closeNav();
+                        chatlist();
+                        right_nav_count = 1;
+                    }else{
+                        document.getElementById("rn_wrap").style.width = "0";
+                        document.getElementById("right_nav").style.width = "0";
+                        document.getElementById("rn_wrap").style.zindex = 99;
+                        document.getElementById("right_button").style.marginRight = "0";
+                        document.getElementById("right_nav_button_img").src  = "image/btn_left.png"; // 사진 경로 설정
+                        right_nav_count = 0;
+                    }
+                });
+                
+                //로그인 페이지 x버튼 이벤트
+                $("#login_x_btn").click(function(){
+                    $("#login_set").css("display", "none");
+                }); 
+                // $("#login_x_btn").click(function(){ END
+                
+                //회원가입 페이지 x버튼 이벤트
+                $("#sign_x_btn").click(function(){
+                    $("#join_set").css("display", "none");
+                });
+                // $("#sign_x_btn").click(function(){ END
+
+                //회원가입 페이지 취소버튼 이벤트
+                $("#sign_cancel").click(function(){
+                    $("#join_set").css("display", "none");
+                });
+                // $("#sign_cancel").click(function(){ END
+
+                //회원가입 버튼 이벤트
+                $("#signupBtn").click(function(){
+                    $("#join_set").css("display", "block");
+                }); 
+                // $("#signupBtn").click(function(){ END
+                
+                //게시판 클릭 이벤트    
+                $("#notice_table tbody").on("click", "tr" , function() {
+
+                    //게시판의 notice_key 뽑는것
+                    var v_key = $(this).children("#notice_key").text();
+
+                    //notice_key 를 저장시키는 변수
+                    var params = v_key;
+                    
+                    $.ajax({
+                        type:"GET",//전송방식
+                        url: root+"/notice_select",    //주소
+                        dataType:"json", // 받을 때 데이터 타입
+                        data: {data:params},
+                        async : false,
+                        success:function(response){ // 이 xml 형태의 데이터를 args로 받음 (바깥으로부터 들어옴)             
+
+                            // data = response
+                            if(response) {
+                                    $("#notice_board").css("display", "none");//게시판 페이지 닫기
+                                    $("#input_cbox").css("display", "block");//설명창 페이지 닫기
+                                    $("#sidenav_back").css("display", "block");//뒤로가기 버튼 닫기
+                                    
+                                    // // image내용 잘라내기 위해
+                                    var pic_name = response[0][2].split('/');            
+
+                                    // 파일이름과 확장자 구분하기 위해
+                                    var pic_ext = pic_name[1].split('.');
+
+                                    // 카테고리 저장하기 위해
+                                    var category_detail = response[0][4];
+
+                                    document.getElementById("imgPlus").src  = "image\\" + pic_ext[0] + "." + pic_ext[1]; // 사진 경로 설정
+                                    $(".title_box_input").val(response[0][3]); // 제목 설정
+                                    if(category_detail == "먹거리"){
+                                        $("#cate_choose").val("food").prop("selected",true); // 카테고리 설정(먹거리)
+                                    } else {
+                                        $("#cate_choose").val("see").prop("selected",true); // 카테고리 설정(볼거리)
+                                    }
+                                    $("#writer_box_content").text(response[0][1]);
+                                    $(".content_box_input").val(response[0][5]); // 내용 설정
+
+                                }       
+
+                        },error:function(err){
+                            // 서버와 통신이 실패일 때
+                            console.log("error:" + err);
+                        }
+
+
+                    });
+                });
+
+
+                //먹거리 토글 이벤트
+                $("#eat_toogle_input").click(function(){
+                    if(eat_count == 1){
+                        $("#eat_toggle > img").css("opacity", "0.5");//투명도 조절
+                        eat_count = 0;
+                    }else{
+                        
+                        $("#eat_toggle > img").css("opacity", "1");
+                        eat_count = 1;
+                    }
+                    toggle_event();
+                }); 
+                // $("#eat_toogle_input").click(function(){ END
+
+                //볼거리 토글 이벤트
+                $("#see_toogle_input").click(function(){
+                    if(see_count == 1){
+                        $("#see_toggle > img").css("opacity", "0.5");//투명도 조절
+                        see_count = 0;
+                    }else{
+                        $("#see_toggle > img").css("opacity", "1");
+                        see_count = 1;
+                    }
+                    toggle_event();
+                }); 
+                // $("#see_toogle_input").click(function(){ END
+
+                //스토리 토글 이벤트
+                $("#story_toogle_input").click(function(){
+                    if(story_count == 1){
+                        $("#all_story_gps > img").css("opacity", "0.5");//투명도 조절
+                        story_count = 0;
+                    }else{
+                        $("#all_story_gps > img").css("opacity", "1");
+                        story_count = 1;
+                    }
+                    toggle_event();
+                }); 
+                // $("#see_toogle_input").click(function(){ END
+
+                // 로그인 버튼 클릭시 
+                $("#loginBtn").click(function() {
+                    var params = $("#i_user_id").val() + 
+                        "," + $("#i_user_pwd").val(); //쿼리임 데이터만 넘길 것!
+                    
+                    $.ajax({
+                        type:"GET",//전송방식
+                        url: root +"/login_value",    //주소
+                        dataType:"json", // 받을 때 데이터 타입
+                        data: {data:params},
+                        async : false,
+                        success:function(response){ // 이 xml 형태의 데이터를 args로 받음 (바깥으로부터 들어옴)             
+                            // xml 형태니깐 parsing 작업을 해서 받아야함
+
+                            // data = response
+                            if(response) {
+                                
+                                // console.log("res", response)
+                                // 로그인 결과 처리
+                                if(response == ''){
+                                    alert("아이디&비밀번호를 확인해주세요");
+                                } else if(response == "Y"){
+                                    alert("다른 기기에서 사용중인 아이디입니다.")
+                                } else {
+                                    alert("로그인 성공");
+                                    $("#login_set").css("display", "none");//로그인 페이지 닫기
+                                    $("#map_div").css("opacity", "1"); //지도 투명도 
+                                    $("#map_div").css("pointer-events", "auto"); // 지도 이벤트
+                                    console.log(response)
+                                    loginid = response[0];
+                                    sessionStorage.setItem("id",response[0]);//세션에 로그인 정보 저장
+                                    $('#login_info').text(loginid + "님");
+                                    location.reload();
+                                }
+                            }       
+
+                        },error:function(err){
+                            // 서버와 통신이 실패일 때
+                            console.log("error:" + err);
+                        }
+
+
+                    });
+                }); 
+                // $("#loginBtn").click(function() END
+
+                //로그아웃 버튼 클릭시
+                $("#logout").click(function(){
+                    if(confirm("로그아웃 하시겠습니까?")){
+                        request();
+                        logout_setting();
+                    }
+                });
+                // $("#logout").click(function(){ END
+
+                // 회원가입 버튼 클릭시
+                $('#join_btn').click(function() {
+
+                    if($('#join_user_pwd').val().length < 5){
+                        alert("비밀번호를 다시 작성해주세요");
+
+                    }else if($('#join_user_front_id').val().length <6 || $('#join_user_back_id').val().length < 7){
+                        alert("주민번호를 다시 작성해주세요");
+
+                    }else if( $('#join_phone_1').val().length <3 || $('#join_phone_2').val().length <4 || $('#join_phone_3').val().length <4){
+                        alert("전화번호를 다시 작성해주세요");
+
+                    }else{
+
+                        var params = $('#join_user_id').val() + 
+                                    ", " + $('#join_user_pwd').val() +  
+                                    ", " + $('#join_user_name').val() +
+                                    ", " + $('#join_user_front_id').val() 
+                                    + "-" +$('#join_user_back_id').val() +
+                                    ", " + $('#join_phone_1').val() + "-"
+                                        + $('#join_phone_2').val() + "-"
+                                        + $('#join_phone_3').val(); // 쿼리임 데이터만 넘길 것
+
+                        $.ajax({
+                            type:"GET", // 전송방식
+                            url:root+"/join_btn", // 주소
+                            dataType:"json", // 받을 때 데이터 타입
+                            data:{data:params},
+                            async:false,
+                            success:function(response){
+
+                                //회원가입 성공 유무
+                                if(response == '1'){
+                                    alert("회원가입 완료되었습니다");
+                                    $("#join_set").css("display", "none");//회원가입폼 닫기
+                                }else{
+                                    alert("회원정보를 다시 작성해 주세요.");
+                                }
+                            },error:function(err){
+                                // 서버와 통신이 실패일 때
+                                console.log("error:" + err);
+                            }
+
+                        });
+
+                    }//else 문 끝
+                });
+                // $('#join_btn').click(function() { END
+                
+
+                //채팅 리스트 뽑는 function
+                function chatlist(){
+                    
+                    var params = loginid;//현재 로그인한 아이디
+                    var chat_people=[];
+
+                    $.ajax({
+                        type:"GET",//전송방식
+                        url:root +"/chat_list",    //주소
+                        data:{data:params}, //데이터
+                        dataType:"json", // 받을 때 데이터 타입
+                        async : false,
+                        success:function(response){ // 이 xml 형태의 데이터를 args로 받음 (바깥으로부터 들어옴)             
+                            // xml 형태니깐 parsing 작업을 해서 받아야함
+                            
+                            if(response) {
+                                $("#right_chat").empty();
+                                var ui = sessionStorage.getItem("id"); // 보내는 사람
+
+                                for(i = 0 ; i < response.length; i++){
+                                    // 잇힝 기모리
+                                    no_read(response[i][0], ui)
+                                    
+                                    last_message(response[i][0]);//마지막채팅 가져오는것
+                                    
+                                    var chatdiv = $('<div class="chat_line">');//채팅방 div
+                                    var chatimg = $('<img src = "image/person.png" id = "chatuserimg" width = "30px">');//이미지 부분
+                                    var chatuser = $('<p id= "chatuser">'+response[i][1]+'</p>');//이미지 부분
+                                    var chatmessage = $('<p id= "message">'+l_message+'</p>');//마지막으로 보낸 메세지 부분
+                                    var noreadcnt = $('<p id= "no_read_count">'+no_read_message_cnt+'</p>');
+
+                                    chatdiv.append(chatimg);//상대방 이미지 넣는곳
+                                    chatdiv.append(chatuser);//상대방 이름 넣는곳
+                                    chatdiv.append(noreadcnt); // 안읽은 갯수 넣는곳
+                                    chatdiv.append(chatmessage);//마지막 채팅 넣는곳
+                                    
+                        
+                                    $('#right_chat').append(chatdiv);//right chat div 에 div 넣기
+                        
+                                    right_chat.scrollTop = right_chat.scrollHeight;//채팅치면 올라가기
+                                }
+                            }       
+
+                        },error:function(err){
+                            // 서버와 통신이 실패일 때
+                            console.log("error:" + err);
+                        }
+                        });
+               
+                }
+                
+                // 안읽은 채팅 메세지 카운트
+                function no_read(chat_id, user){
+                    no_read_message_cnt = 0; // 호출시 카운트 저장함수 항상 0으로 초기화
+                    
+                    var params = chat_id + ',' +user;
+                    
+                
+                    $.ajax({
+                        type:"GET",//전송방식
+                        url:root +"/no_read_cnt",    //주소
+                        data:{data:params}, //데이터
+                        dataType:"json", // 받을 때 데이터 타입
+                        async : false,
+                        success:function(response){ // 이 xml 형태의 데이터를 args로 받음 (바깥으로부터 들어옴)             
+                            // xml 형태니깐 parsing 작업을 해서 받아야함
+                            
+                            if(response) {
+                                no_read_message_cnt = response;
+                                
+                            }       
+
+                        },error:function(err){
+                            // 서버와 통신이 실패일 때
+                            console.log("error:" + err);
+                        }
+                    });
+                }
+                
+                //가장 최근 대화목록 가져오는것
+                function last_message(chat_id){
+
+                    l_message= "";
+
+                    var params = chat_id;//채팅방 아이디
+                    
+                    $.ajax({
+                        type:"GET",//전송방식
+                        url:root +"/last_chat",    //주소
+                        data:{data:params}, //데이터
+                        dataType:"json", // 받을 때 데이터 타입
+                        async : false,
+                        success:function(response){ // 이 xml 형태의 데이터를 args로 받음 (바깥으로부터 들어옴)             
+                            // xml 형태니깐 parsing 작업을 해서 받아야함
+                            
+                            if(response) {
+                                l_message = response;
+                                
+                            }       
+
+                        },error:function(err){
+                            // 서버와 통신이 실패일 때
+                            console.log("error:" + err);
+                        }
+                    });
+                }
+
+
+                // 방목록 클릭했을 때
+                $(document).on("click", ".chat_line", function(event){
+                    var get_user = $(this).children("#chatuser").text(); // 메세지 받는 사람 아이디 저장
+                    
+                    $(this).children("#no_read_count").hide();
+                    
+                    xPos = (document.body.offsetWidth) - 410; // 오른쪽 정렬
+                    yPos = (document.body.offsetHeight) - 430;
+                    xPos += window.screenLeft; // 듀얼 모니터 일떄
+
+                    var ui = sessionStorage.getItem("id"); // 보내는 사람
+
+                    window.open("http://ktiss.win-it.co.kr/chat?'"+ui +","+get_user+"", '', 'width=410, height=430 , top = '+yPos +' , left = '+xPos +''); // 링크
+                    // search_room(ui, get_user) // 방번호 찾는 함수 호출
+                    return false;
+                })
+                
+                // 방번호 찾기 위한 함수
+                function search_room(user01,user02){
+                    
+                    var params = user01 + "," + user02;//채팅방 아이디
+
+                    $.ajax({
+                        type:"GET",//전송방식
+                        url:root +"/search_room",    //주소
+                        data:{data:params}, //데이터
+                        dataType:"json", // 받을 때 데이터 타입
+                        async : false,
+                        success:function(response){ // 이 xml 형태의 데이터를 args로 받음 (바깥으로부터 들어옴)             
+                            // xml 형태니깐 parsing 작업을 해서 받아야함
+                            
+                            if(response) {
+                                
+                                update_noread(response)
+                            }       
+
+                        },error:function(err){
+                            // 서버와 통신이 실패일 때
+                            console.log("error:" + err);
+                        }
+                    });
+                }
+
+                function update_noread(data){
+                
+                    var params = data;//채팅방 아이디
+
+                    $.ajax({
+                        type:"GET",//전송방식
+                        url:root +"/update_no_read_state",    //주소
+                        data:{data:params}, //데이터
+                        dataType:"json", // 받을 때 데이터 타입
+                        async : false,
+                        success:function(response){ // 이 xml 형태의 데이터를 args로 받음 (바깥으로부터 들어옴)             
+                            // xml 형태니깐 parsing 작업을 해서 받아야함
+                            
+                            
+                        },error:function(err){
+                            // 서버와 통신이 실패일 때
+                            console.log("error:" + err);
+                        }
+                    });
+                }
+            
+                //토글 이벤트들
+                function toggle_event(){
+
+                    var i;//for 문 돌리는 변수
+                    var icon_img;
+                    //토글의 클릭 유무 받아오는 것
+                    var params = sessionStorage.getItem("id")
+                          +"," + story_count
+                          +"," + eat_count
+                          +"," + see_count;
+                    
+                    for(var i = 0; i < storymarker.length; i++){
+                        storymarker[i].setMap(null);
+                    }//스토리 마커 없애기
+                    storymarker = []; //스토리 마커 배열 초기화
+
+                    if((story_count == 0 && eat_count == 0 && see_count == 0) || (story_count == 1 && eat_count == 0 && see_count == 0)){
+                        return;
+                    }
+
+                    $.ajax({
+                        type:"GET",//전송방식
+                        url:root + "/marker_select",    //주소
+                        data:{data:params}, //데이터
+                        dataType:"json", // 받을 때 데이터 타입
+                        async : false,
+                        success:function(response){ // 이 xml 형태의 데이터를 args로 받음 (바깥으로부터 들어옴)             
+                            // xml 형태니깐 parsing 작업을 해서 받아야함
+                            
+                            if(response) {
+
+                                for(i = 0 ; i < response.length; i++){
+                                    // 먹거리 일때
+                                    if(response[i][2] == "먹거리"){
+                                        icon_img = "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_r_m_e.png";
+                                    }else{
+                                        //볼거리
+                                        icon_img = "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_g_m_s.png";
+                                    }
+
+                                    wido = response[i][0];      // 위도 저장
+                                    gyungdo = response[i][1];   // 경도 저장
+                                    choose = response[i][2];    // 카테고리 저장
+                                    marker = new Tmapv2.Marker({
+                                    position : new Tmapv2.LatLng(response[i][0],response[i][1]),//지도 초기 마커
+                                    icon: icon_img,
+                                    map : map//marker가 표시될 map 설정
+                                    });
+
+                                    // 마커 고유 아이디 = count
+                                    // 마커에 고유 아이디 부여하기 위함
+                                    addListener2(marker, count,wido,gyungdo,choose);                                
+
+                                    storymarker.push(marker);
+
+                                    // 배열에 값 저장
+                                    var positions = [wido, gyungdo, choose];
+
+                                    // 배열에 값 넣기
+                                    all_content.push(positions);
+
+                                    // 아이디 증가
+                                    count++; // 고유아이디
+                                }
+                            }       
+
+                        },error:function(err){
+                            // 서버와 통신이 실패일 때
+                            console.log("error:" + err);
+                        }
+                        });
+                } // function toggle_event(){ END
+
+                $('#sidenav_modified').click(function () {
+                    modifiedNav(s_wido, s_gyungdo, s_choose);
+                }); // $('#sidenav_modified').click(function () { END
+
+            }); // $(document).ready(function() { END
+
+
+            // 마커에 고유 아이디 번호 받아옴
+            function addListener2(marker,count,wido,gyungdo,choose){
+                marker.addListener("click", function(evt) {
+                openBox2(count,wido,gyungdo);
+                s_count = count;
+                s_wido = wido; // s_wido 에 wido 값 넣어줌
+                s_gyungdo = gyungdo; // s_gyungdo 에 gyungdo 값 넣어줌
+                s_choose = choose; // s_choose 에 카테고리 값 넣어줌
+                });
+            }
+            
+
+            // 사진 등록, 글 등록 하는 입력박스
+            function openBox2(count,wido,gyungdo){
+                //게시판으로 초기화
+                document.getElementById("right_nav").style.width = "0";
+                document.getElementById("right_button").style.marginRight = "0";
+                document.getElementById("right_nav_button_img").src  = "image/btn_left.png"; // 사진 경로 설정
+                right_nav_count = 0;
+                $("#input_cbox").css("display", "none");//설명창 페이지 닫기
+                $("#sidenav_back").css("display", "none");//뒤로가기 버튼 닫기
+                $("#notice_board").css("display", "block");//게시판 페이지 열기
+                document.getElementById("imgPlus").src  = first_img;//뒤로가기 이미지 초기화
+
+                var params = wido +"," + gyungdo; // 위경도 값 가져오기
+                
+                $.ajax({
+                    type:"GET",//전송방식
+                    url: root +"/marker_click",    //주소
+                    data:{data:params}, //데이터
+                    dataType:"json", // 받을 때 데이터 타입  
+                    async : false,
+                    success:function(response){ // 이 xml 형태의 데이터를 args로 받음 (바깥으로부터 들어옴)             
+                        // xml 형태니깐 parsing 작업을 해서 받아야함
+                        // console.log(response)
+                        if(response) {
+                            $("#notice_table > tbody").empty();
+                            // image내용 잘라내기 위해
+                            var pic_name = response[0][1].split('/');            
+                            
+                            // 파일이름과 확장자 구분하기 위해
+                            var pic_ext = pic_name[1].split('.');
+                            first_img = "image\\" + pic_ext[0] + "." + pic_ext[1]; // 사진 경로 설정
+                            //첫번째 조회된거 이미지 띄우기
+                            document.getElementById("imgPlus").src  = first_img;
+                            
+                            for(var i = 0 ; i < response.length; i++){
+                                $("#notice_table > tbody").append($("<tr>"
+                                                    +"<td id = 'notice_key' style = 'display:none;'>" + response[i][5] + "</td>"
+                                                    +"<td style = 'max-width:100px;' >" + (i+1) + "</td>"
+                                                    +"<td style = 'max-width:150px;'>" + response[i][2] + "</td>"
+                                                    +"<td style = 'max-width:600px;'>" + response[i][3] + "</td>"
+                                                    +"<td style = 'max-width:150px;'> " + response[i][0] + "</td>"
+                                                    +"<td style = 'max-width:250px;'>" + response[i][4] + "</td>"
+                                                    +"<td style = 'max-width:100px;'>" + response[i][6] + "</td></tr>"));
+                            }
+                            document.getElementById("input_box").style.height = "58%";
+                        }       
+
+                    },error:function(err){
+                        // 서버와 통신이 실패일 때
+                        console.log("error:" + err);
+                    }
+                });
+                
+            } // function openBox2(count,wido,gyungdo){ END
+
+            //JS 시작 부분
+            // 페이지가 로딩이 된 후 호출하는 함수입니다.
+            function initTmap(){
+
+                loginid = sessionStorage.getItem("id");
+                if(loginid == null){
+                    // 처음 들어갔을때 로그인 창 on
+                    logout_setting();
+                }
+                else if(loginid == ""){
+                    // 로그아웃 클릭시 로그인 창 on
+                    logout_setting();
+                }
+                else{
+                    // 새로고침시 로그인 창 on
+                    login_setting();
+                    $('#login_info').text(loginid + "님");
+                    maintain();
+                    // logout_setting();
+                }
+                
+                navigator.geolocation.getCurrentPosition(foundLocation, function(error){
+                    console.log(error.message);
+                });
+            }
+
+            //로그인 처리 함수
+            function login_setting(){
+                document.getElementById("login_set").style.display = "none";
+                document.getElementById("map_div").style.pointerEvents = "auto"; // 지도 마우스 이벤트
+            }
+
+            //로그아웃 처리 함수
+            function logout_setting(){
+                sessionStorage.setItem("id", "");
+                document.getElementById("i_user_id").value = "";
+                document.getElementById("i_user_pwd").value = "";
+                document.getElementById("i_user_id").focus(); // 로그인 div 포커스 설정
+                document.getElementById("login_set").style.display = "block";
+                document.getElementById("map_div").style.opacity = "0.5"; // 뒷배경 투명도 설정
+                document.getElementById("map_div").style.pointerEvents = "none"; // 지도 마우스 이벤트
+                $( '#story_toogle_input' ).prop( 'checked', false ); // 모든스토리 토글 버튼 on -> off
+                $( '#eat_toogle_input' ).prop( 'checked', false ); // 먹거리 토글 버튼 on -> off
+                $( '#see_toogle_input' ).prop( 'checked', false ); // 볼거리 토글 버튼 on -> off
+                $('#login_info').text("님");
+
+    
+                removeMarkers();//마커 초기화
+                closeNav();//설명창 초기화
+                document.getElementById("right_nav").style.width = "0";
+                document.getElementById("right_button").style.marginRight = "0";
+                document.getElementById("right_nav_button_img").src  = "image/btn_left.png"; // 사진 경로 설정
+                right_nav_count = 0;
+                eat_count = 0; //먹거리 토글
+                see_count = 0; // 볼거리 토글
+                story_count = 0;//전체이용자 토글
+                $("#see_toggle > img").css("opacity", "0.5");//투명도 조절
+                $("#eat_toggle > img").css("opacity", "0.5");//투명도 조절
+                $("#all_story_gps > img").css("opacity", "0.5");//투명도 조절
+            }
+
+            //로그인한 아이디 컨텐츠로 넘기기
+            function content_link(){
+                var ui = sessionStorage.getItem("id");
+                location.href = "WinContent.html?'"+ui +"'";
+                eat_count = 0; //먹거리 토글
+                see_count = 0; // 볼거리 토글
+                story_count = 0;//전체이용자 토글
+                // maintain();
+            }//
+            function maintain() {
+                var loginid = sessionStorage.getItem("id"); // 보내는 사람
+                console.log(loginid)
+                return $.ajax({
+                    type: "GET",
+                    url: root+"/login_maintain",
+                    data: {data:loginid},
+                    async: true
+                }); // .responseText
+            }
+            
+            //작성버튼 이벤트
+            function modifiedNav(s_wido, s_gyundo, s_choose){
+                var choose_nm
+                if(s_choose == "먹거리"){
+                    choose_nm = 1;
+                } else {
+                    choose_nm = 2;
+                }
+                location.href = "WinContent.html?"+s_wido +","+s_gyungdo+","+choose_nm;
+            }
+
+            //현재 위치를 찾아 표시하는 함수
+            function foundLocation(position){
+                latitud = position.coords.latitude; // 위도
+                longitude = position.coords.longitude; //경도
+                // map 생성
+                // Tmap.map을 이용하여, 지도가 들어갈 div, 넓이, 높이를 설정합니다.
+                map = new Tmapv2.Map("map_div", {
+                    center : new Tmapv2.LatLng(latitud,longitude), // 지도 초기 좌표
+                    width : "100%", // map의 width 설정
+                    height : "100%",// map의 height 설정  
+                    zoom : 14
+                });
+
+                marker = new Tmapv2.Marker({
+                    position : new Tmapv2.LatLng(latitud,longitude),//지도 초기 마커
+                    icon : "http://tmapapis.sktelecom.com/upload/tmap/marker/pin_b_m_i.png",
+                    map : map//marker가 표시될 map 설정
+                });
+                markers.push(marker);
+            }
+
+            //데이터 로드중 실행하는 함수입니다.
+            function onProgress(){
+            }
+            //데이터 로드 중 에러가 발생시 실행하는 함수입니다.
+            function onError(){
+                alert("onError");
+            }
+            
+            //마커 초기화
+            function removeMarkers(){
+                for(var i = 0; i < markers.length; i++){
+                    markers[i].setMap(null);
+                }//클릭 마커 없애기
+                for(var i = 0; i < storymarker.length; i++){
+                    storymarker[i].setMap(null);
+                }//스토리 마커 없애기
+                markers = [];//마커 배열 초기화
+                storymarker = []; //스토리 마커 배열 초기화
+            }
+            // 사진 등록, 글 등록 하는 입력박스
+            function openBox(){
+                document.getElementById("input_box").style.height = "58%";
+            }
+            // 입력박스 닫기
+            function closeNav(){
+                document.getElementById("input_box").style.height = "0";
+            }
+
+            //게시판 뒤로가기
+            function backNav(){
+                openBox2(s_count,s_wido,s_gyungdo);
+            }
+            //글로벌 버튼 이벤트
+            function world(){
+                map.setZoom(8); //지도 확대값
+            }
+            //현재 내위치 찍는곳
+            function current_location(){
+                map.setCenter(new Tmapv2.LatLng(latitud,longitude));
+                map.setZoom(14);
+            }
+            // 마커지우는 버튼
+            function mark_erase() {
+                removeMarkers();
+            }
+           
+            //메시지 메서드
+            function chatopen(){
+                xPos = (document.body.offsetWidth) - 410; // 오른쪽 정렬
+                yPos = (document.body.offsetHeight) - 430;
+                xPos += window.screenLeft; // 듀얼 모니터 일떄
+
+                var ui = sessionStorage.getItem("id"); // 보내는 사람
+                var senduser = document.getElementById("writer_box_content").innerText;//받는사람
+
+                window.open("http://ktiss.win-it.co.kr/chat?'"+ui +","+senduser+"", '', 'width=400, height=400 , top = '+yPos +' , left = '+xPos +''); 
+                return false;
+            }
+
+            // 탭 닫기 하면 로그아웃 하는 부분
+            function request() {
+                var loginid = sessionStorage.getItem("id"); // 보내는 사람
+                console.log(loginid)
+                return $.ajax({
+                    type: "GET",
+                    url: root+"/logout",
+                    data: {data:loginid},
+                    async: true
+                }); // .responseText
+            }
+            window.onbeforeunload = () => {
+                // while (true) {
+                //     request();
+                // }
+                // return null;
+                request();
+            }
+            // 탭닫기하면 로그아웃 하는 부분
+        </script>
+
+    </body>
+</html>
